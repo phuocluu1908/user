@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get, Param, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  BadRequestException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 
@@ -8,7 +15,7 @@ export class UserController {
 
   @Post('register')
   register(
-    @Body() body: { email: string; password: string; name?: string }
+    @Body() body: { email: string; password: string; name?: string },
   ): User {
     if (this.userService.findByEmail(body.email)) {
       throw new BadRequestException('Email already registered');
