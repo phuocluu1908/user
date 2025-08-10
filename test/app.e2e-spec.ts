@@ -30,7 +30,7 @@ describe('UserController (e2e)', () => {
   });
 
   it('should register a user', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer() as any)
       .post('/users/register')
       .send({ email: 'e2e@example.com', password: 'pass', name: 'E2E' })
       .expect(201);
@@ -43,7 +43,7 @@ describe('UserController (e2e)', () => {
 
   it('should get a user by id', async () => {
     // First, register a user
-    const registerRes = await request(app.getHttpServer())
+    const registerRes = await request(app.getHttpServer() as any)
       .post('/users/register')
       .send({ email: 'e2e2@example.com', password: 'pass', name: 'E2E2' })
       .expect(201);
@@ -52,7 +52,7 @@ describe('UserController (e2e)', () => {
     const userId = registeredUser.id;
 
     // Then, get the user
-    const getRes = await request(app.getHttpServer())
+    const getRes = await request(app.getHttpServer() as any)
       .get(`/users/${userId}`)
       .expect(200);
 
