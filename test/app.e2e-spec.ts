@@ -1,24 +1,50 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 
-describe('AppController (e2e)', () => {
+describe('UserController (e2e)', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
     await app.init();
   });
 
-  it('/ (GET)', async () => {
-    await request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should register a user', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/users/register')
+      .send({ email: 'e2e@example.com', password: 'pass', name: 'E2E' })
+      .expect(201);
+
+    expect(res.body).toHaveProperty('id');
+    expect(res.body.email).toBe('e2e@example.com');
+  });
+
+  it('should get a user by id', async () => {
+    // First, register a user
+    const registerRes = await request(app.getHttpServer())
+      .post('/users/register')
+      .send({ email: 'e2e2@example.com', password: 'pass', name: 'E2E2' })
+      .expect(201);
+
+    const userId = registerRes.body.id;
+
+    // Then, get the user
+    const getRes = await request(app.getHttpServer())
+      .get(`/users/${userId}`)
+      .expect(200);
+
+    expect(getRes.body).toHaveProperty('id', userId);
+    expect(getRes.body.email).toBe('e2e2@example.com');
   });
 });

@@ -14,18 +14,19 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  register(
-    @Body() body: { email: string; password: string; name?: string },
-  ): User {
-    if (this.userService.findByEmail(body.email)) {
+  async register(
+    @Body() body: { email: string; password: string; name?: string }
+  ): Promise<User> {
+    const existingUser = await this.userService.findByEmail(body.email);
+    if (existingUser) {
       throw new BadRequestException('Email already registered');
     }
-    return this.userService.createUser(body.email, body.password, body.name);
+    return await this.userService.createUser(body.email, body.password, body.name);
   }
 
   @Get(':id')
-  getUser(@Param('id') id: string): User {
-    const user = this.userService.findById(Number(id));
+  async getUser(@Param('id') id: string): Promise<User> {
+    const user = await this.userService.findById(Number(id));
     if (!user) throw new BadRequestException('User not found');
     return user;
   }
