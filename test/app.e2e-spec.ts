@@ -35,7 +35,7 @@ describe('UserController (e2e)', () => {
       .send({ email: 'e2e@example.com', password: 'pass', name: 'E2E' })
       .expect(201);
 
-    const user: UserResponse = res.body;
+    const user: UserResponse = res.body as UserResponse;;
 
     expect(user).toHaveProperty('id');
     expect(user.email).toBe('e2e@example.com');
@@ -48,7 +48,7 @@ describe('UserController (e2e)', () => {
       .send({ email: 'e2e2@example.com', password: 'pass', name: 'E2E2' })
       .expect(201);
 
-    const registeredUser: UserResponse = registerRes.body;
+    const registeredUser: UserResponse = registerRes.body as UserResponse;;
     const userId = registeredUser.id;
 
     // Then, get the user
@@ -56,7 +56,7 @@ describe('UserController (e2e)', () => {
       .get(`/users/${userId}`)
       .expect(200);
 
-    const user: UserResponse = getRes.body;
+    const user: UserResponse = getRes.body as UserResponse;;
     expect(user).toHaveProperty('id', userId);
     expect(user.email).toBe('e2e2@example.com');
   });
