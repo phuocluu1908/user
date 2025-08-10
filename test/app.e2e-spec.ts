@@ -3,6 +3,13 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 
+interface UserResponse {
+  id: string;
+  email: string;
+  name: string;
+  // Add other fields if your user entity has more
+}
+
 describe('UserController (e2e)', () => {
   let app: INestApplication;
 
@@ -28,8 +35,10 @@ describe('UserController (e2e)', () => {
       .send({ email: 'e2e@example.com', password: 'pass', name: 'E2E' })
       .expect(201);
 
-    expect(res.body).toHaveProperty('id');
-    expect(res.body.email).toBe('e2e@example.com');
+    const user: UserResponse = res.body;
+
+    expect(user).toHaveProperty('id');
+    expect(user.email).toBe('e2e@example.com');
   });
 
   it('should get a user by id', async () => {
@@ -39,14 +48,16 @@ describe('UserController (e2e)', () => {
       .send({ email: 'e2e2@example.com', password: 'pass', name: 'E2E2' })
       .expect(201);
 
-    const userId = registerRes.body.id;
+    const registeredUser: UserResponse = registerRes.body;
+    const userId = registeredUser.id;
 
     // Then, get the user
     const getRes = await request(app.getHttpServer())
       .get(`/users/${userId}`)
       .expect(200);
 
-    expect(getRes.body).toHaveProperty('id', userId);
-    expect(getRes.body.email).toBe('e2e2@example.com');
+    const user: UserResponse = getRes.body;
+    expect(user).toHaveProperty('id', userId);
+    expect(user.email).toBe('e2e2@example.com');
   });
 });
