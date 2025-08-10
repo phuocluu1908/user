@@ -15,13 +15,17 @@ export class UserController {
 
   @Post('register')
   async register(
-    @Body() body: { email: string; password: string; name?: string }
+    @Body() body: { email: string; password: string; name?: string },
   ): Promise<User> {
     const existingUser = await this.userService.findByEmail(body.email);
     if (existingUser) {
       throw new BadRequestException('Email already registered');
     }
-    return await this.userService.createUser(body.email, body.password, body.name);
+    return await this.userService.createUser(
+      body.email,
+      body.password,
+      body.name,
+    );
   }
 
   @Get(':id')

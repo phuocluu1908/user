@@ -28,22 +28,39 @@ describe('UserService', () => {
   });
 
   it('should create a user', async () => {
-    const user = { id: 1, email: 'test@example.com', password: 'pass', name: 'Test' } as User;
+    const user = {
+      id: 1,
+      email: 'test@example.com',
+      password: 'pass',
+      name: 'Test',
+    } as User;
     jest.spyOn(repo, 'create').mockReturnValue(user);
     jest.spyOn(repo, 'save').mockResolvedValue(user);
 
-    expect(await service.createUser(user.email, user.password, user.name)).toEqual(user);
+    expect(
+      await service.createUser(user.email, user.password, user.name),
+    ).toEqual(user);
   });
 
   it('should find user by email', async () => {
-    const user = { id: 1, email: 'test@example.com', password: 'pass', name: 'Test' } as User;
+    const user = {
+      id: 1,
+      email: 'test@example.com',
+      password: 'pass',
+      name: 'Test',
+    } as User;
     jest.spyOn(repo, 'findOne').mockResolvedValue(user);
 
     expect(await service.findByEmail(user.email)).toEqual(user);
   });
 
   it('should find user by id', async () => {
-    const user = { id: 1, email: 'test@example.com', password: 'pass', name: 'Test' } as User;
+    const user = {
+      id: 1,
+      email: 'test@example.com',
+      password: 'pass',
+      name: 'Test',
+    } as User;
     jest.spyOn(repo, 'findOne').mockResolvedValue(user);
 
     expect(await service.findById(user.id)).toEqual(user);
