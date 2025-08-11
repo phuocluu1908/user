@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import type { Server } from 'http';
+import { MySqlContainer, StartedMySqlContainer } from '@testcontainers/mysql';
 
 interface UserResponse {
   id: string;
@@ -13,8 +14,23 @@ interface UserResponse {
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
+  let mysql: StartedMySqlContainer;
 
   beforeAll(async () => {
+    mysql = await new MySqlContainer('mysql:8.0')
+    .withDatabase('test_db')
+    .withUsername('test')
+    .withUserPassword('test') // for non-root user
+    .withRootPassword('rootpass') // optional
+    .start();
+
+    // Set env for TypeORM config
+    process.env.DB_HOST = mysql.getHost();
+    process.env.DB_PORT = String(mysql.getPort());
+    process.env.DB_USER = mysql.getUsername();
+    process.env.DB_PASS = mysql.getUserPassword();
+    process.env.DB_NAME = mysql.getDatabase();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
