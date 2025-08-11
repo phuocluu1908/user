@@ -43,8 +43,8 @@ describe('UserController (e2e)', () => {
   });
 
   afterAll(async () => {
-    await app.close();
-    await mysql.stop();
+    await app?.close();
+    await mysql?.stop();
   });
 
   it('should register a user', async () => {
