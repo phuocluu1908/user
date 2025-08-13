@@ -44,6 +44,9 @@ jobs:
       - name: Run unit tests
         run: npm run test
 
+      - name: Check MySQL status
+        run: docker exec $(docker ps -q -f name=mysql) mysqladmin ping -h 127.0.0.1 -u test -ptest
+
       - name: Run e2e tests
         env:
           DB_HOST: 127.0.0.1

@@ -18,19 +18,25 @@ describe('UserController (e2e)', () => {
 
   beforeAll(async () => {
     mysql = await new MySqlContainer('mysql:8.0')
-    .withDatabase('test_db')
-    .withUsername('test')
-    .withUserPassword('test') // for non-root user
-    .withRootPassword('rootpass') // optional
-    .start();
+      .withDatabase('test_db')
+      .withUsername('test')
+      .withUserPassword('test') // for non-root user
+      .withRootPassword('rootpass') // optional
+      .start();
 
     // Set env for TypeORM config
-    process.env.DB_HOST = '127.0.0.1';               // safer than localhost
+    process.env.DB_HOST = '127.0.0.1'; // safer than localhost
     process.env.DB_PORT = String(mysql.getPort());
     process.env.DB_USER = mysql.getUsername();
     process.env.DB_PASS = mysql.getUserPassword();
     process.env.DB_NAME = mysql.getDatabase();
     process.env.NODE_ENV = 'test';
+
+    console.log('DB_HOST:', process.env.DB_HOST);
+    console.log('DB_PORT:', process.env.DB_PORT);
+    console.log('DB_USER:', process.env.DB_USER);
+    console.log('DB_PASS:', process.env.DB_PASS);
+    console.log('DB_NAME:', process.env.DB_NAME);
 
     const { AppModule } = await import('../src/app.module.ts');
 
