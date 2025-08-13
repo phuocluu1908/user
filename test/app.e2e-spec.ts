@@ -32,7 +32,7 @@ describe('UserController (e2e)', () => {
     process.env.DB_NAME = mysql.getDatabase();
     process.env.NODE_ENV = 'test';
 
-    const { AppModule } = await import('../src/app.module.js');
+    const { AppModule } = await import('../src/app.module.ts');
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
